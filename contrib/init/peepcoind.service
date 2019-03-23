@@ -1,0 +1,26 @@
+[Unit]
+Description=PeepCoin's distributed currency daemon
+After=network.target
+
+[Service]
+User=peepcoin
+Group=peepcoin
+
+Type=forking
+PIDFile=/var/lib/peepcoind/peepcoind.pid
+
+ExecStart=/usr/bin/peepcoind -daemon -pid=/var/lib/peepcoind/peepcoind.pid \
+          -conf=/etc/peepcoin/peepcoin.conf -datadir=/var/lib/peepcoind
+
+ExecStop=-/usr/bin/peepcoin-cli -conf=/etc/peepcoin/peepcoin.conf \
+         -datadir=/var/lib/peepcoind stop
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target
